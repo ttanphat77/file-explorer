@@ -1,8 +1,8 @@
 
 import { SelectionModel } from '@angular/cdk/collections';
 import { FlatTreeControl } from '@angular/cdk/tree';
-import { Component, OnInit } from '@angular/core';
-import { MatTableDataSource, MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { MatSort, MatTableDataSource, MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material';
 import { DataSourceService } from '../service/data-source.service';
 
 interface FoodNode {
@@ -71,21 +71,28 @@ const ELEMENT_DATA: PeriodicElement[] = [
   templateUrl: './file-explorer.component.html',
   styleUrls: ['./file-explorer.component.scss']
 })
-export class FileExplorerComponent implements OnInit {
+export class FileExplorerComponent implements OnInit, AfterViewInit {
+
+  @ViewChild(MatSort) sort: MatSort;
 
   public activeNode = null;
-  displayedColumns = ['select', 'name', 'weight', 'symbol'];
+  displayedColumns = ['select', 'name', 'weight', 'symbol', 'action'];
   tableDataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
 
 
   constructor(private dataSourceService: DataSourceService) {
     this.dataSource.data = TREE_DATA;
   }
-
-  hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
+  ngAfterViewInit() {
+    setTimeout(() => {
+      this.tableDataSource.sort = this.sort;
+    }, 1000);
+  }
 
   ngOnInit() {
   }
+
+  hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
 
   private transformer = (node: FoodNode, level: number) => {
     return {
@@ -119,8 +126,8 @@ export class FileExplorerComponent implements OnInit {
   /** Selects all rows if they are not all selected; otherwise clear selection. */
   masterToggle() {
     this.isAllSelected() ?
-        this.selection.clear() :
-        this.tableDataSource.data.forEach(row => this.selection.select(row));
+      this.selection.clear() :
+      this.tableDataSource.data.forEach(row => this.selection.select(row));
   }
 
   /** The label for the checkbox on the passed row */
@@ -130,5 +137,5 @@ export class FileExplorerComponent implements OnInit {
     }
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
   }
-  
+
 }
