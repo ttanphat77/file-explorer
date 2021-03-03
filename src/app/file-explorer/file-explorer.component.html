@@ -1,101 +1,112 @@
-<div class="container">
-  <div class="row">
-    <div class="col-lg-12">
-      <ejs-splitter #horizontal width='100%'>
-        <e-panes>
-          <e-pane size="25%" min="20%" max="50%">
-            <ng-template #content>
-              <!-- Folder tree -->
-              <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
-                <!-- This is the tree node template for leaf nodes -->
-                <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding (click)="activeNode = node"
-                  [ngClass]="{ 'background-highlight': activeNode === node}" class="folder"
-                  matTreeNodePaddingIndent="24">
-                  <div class="label">
-                    <mat-icon>folder_open</mat-icon>
-                    {{node.name}}
-                  </div>
-                </mat-tree-node>
-                <!-- This is the tree node template for expandable nodes -->
-                <mat-tree-node *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding (click)="activeNode = node"
-                  [ngClass]="{ 'background-highlight': activeNode === node}" class="folder"
-                  matTreeNodePaddingIndent="24">
-                  <div class="label has-childs">
-                    <mat-icon>folder_open</mat-icon>
-                    {{node.name}}
-                  </div>
-                  <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.name"
-                    class="toggle-btn">
-                    <mat-icon class="mat-icon-rtl-mirror">
-                      {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
-                    </mat-icon>
-                  </button>
-                </mat-tree-node>
-              </mat-tree>
-            </ng-template>
-          </e-pane>
-          <e-pane size='75%'>
-            <ng-template #content>
-              <div class="container">
-                <div class="row">
-                  <div class="col-lg-12">
-                    <div class="table-container border">
-                      <table mat-table [dataSource]="tableDataSource" class="files-table" matSort>
+<ejs-splitter #horizontal width='100%'>
+  <e-panes>
+    <e-pane size="25%" min="20%" max="50%">
+      <ng-template #content>
+        <!-- Folder tree -->
+        <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+          <!-- This is the tree node template for leaf nodes -->
+          <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding (click)="activeNode = node"
+            [ngClass]="{ 'background-highlight': activeNode === node}" class="folder" matTreeNodePaddingIndent="24">
+            <div class="label">
+              <mat-icon>folder_open</mat-icon>
+              {{node.name}}
+            </div>
+          </mat-tree-node>
+          <!-- This is the tree node template for expandable nodes -->
+          <mat-tree-node *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding (click)="activeNode = node"
+            [ngClass]="{ 'background-highlight': activeNode === node}" class="folder" matTreeNodePaddingIndent="24">
+            <div class="label has-childs">
+              <mat-icon>folder_open</mat-icon>
+              {{node.name}}
+            </div>
+            <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.name" class="toggle-btn">
+              <mat-icon class="mat-icon-rtl-mirror">
+                {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+              </mat-icon>
+            </button>
+          </mat-tree-node>
+        </mat-tree>
+      </ng-template>
+    </e-pane>
+    <e-pane size='75%'>
+      <ng-template #content>
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="table-container border">
+                <table mat-table [dataSource]="tableDataSource" class="files-table" matSort>
 
-                        <ng-container matColumnDef="select">
-                          <th mat-header-cell *matHeaderCellDef>
-                            <mat-checkbox (change)="$event ? masterToggle() : null"
-                              [checked]="selection.hasValue() && isAllSelected()"
-                              [indeterminate]="selection.hasValue() && !isAllSelected()">
-                            </mat-checkbox>
-                          </th>
-                          <td mat-cell *matCellDef="let row">
-                            <mat-checkbox (click)="$event.stopPropagation()"
-                              (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)">
-                            </mat-checkbox>
-                          </td>
-                        </ng-container>
+                  <ng-container matColumnDef="select">
+                    <th mat-header-cell *matHeaderCellDef>
+                      <mat-checkbox (change)="$event ? masterToggle() : null"
+                        [checked]="selection.hasValue() && isAllSelected()"
+                        [indeterminate]="selection.hasValue() && !isAllSelected()">
+                      </mat-checkbox>
+                    </th>
+                    <td mat-cell *matCellDef="let row">
+                      <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+                        [checked]="selection.isSelected(row)">
+                      </mat-checkbox>
+                    </td>
+                  </ng-container>
 
-                        <!-- Name Column -->
-                        <ng-container matColumnDef="name">
-                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
-                          <td mat-cell *matCellDef="let element"> {{element.name}} </td>
-                        </ng-container>
+                  <!-- Name Column -->
+                  <ng-container matColumnDef="name">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+                    <td mat-cell *matCellDef="let element">
+                      <a href="">
+                        <mat-icon class="file-icon">folder_open</mat-icon>{{element.name}}
+                      </a>
+                    </td>
+                  </ng-container>
 
-                        <!-- Weight Column -->
-                        <ng-container matColumnDef="weight">
-                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Weight </th>
-                          <td mat-cell *matCellDef="let element"> {{element.weight}} </td>
-                        </ng-container>
+                  <!-- Weight Column -->
+                  <ng-container matColumnDef="weight">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Weight </th>
+                    <td mat-cell *matCellDef="let element"> {{element.weight}} </td>
+                  </ng-container>
 
-                        <!-- Symbol Column -->
-                        <ng-container matColumnDef="symbol">
-                          <th mat-header-cell *matHeaderCellDef> Symbol </th>
-                          <td mat-cell *matCellDef="let element"> {{element.symbol}} </td>
-                        </ng-container>
+                  <!-- Symbol Column -->
+                  <ng-container matColumnDef="symbol">
+                    <th mat-header-cell *matHeaderCellDef> Symbol </th>
+                    <td mat-cell *matCellDef="let element"> {{element.symbol}} </td>
+                  </ng-container>
 
-                        <ng-container matColumnDef="action">
-                          <th mat-header-cell *matHeaderCellDef></th>
-                          <td mat-cell *matCellDef="let element">
-                            <button mat-icon-button>
-                              <mat-icon class="mat-icon-rtl-mirror">
-                                more_horiz
-                              </mat-icon>
-                            </button>
-                          </td>
-                        </ng-container>
+                  <ng-container matColumnDef="action">
+                    <th mat-header-cell *matHeaderCellDef></th>
+                    <td mat-cell *matCellDef="let element">
+                      <button mat-icon-button [matMenuTriggerFor]="menu" [matMenuTriggerData]="{element: element}">
+                        <mat-icon class="mat-icon-rtl-mirror">
+                          more_horiz
+                        </mat-icon>
+                      </button>
+                    </td>
+                  </ng-container>
 
-                        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-                      </table>
-                    </div>
-                  </div>
-                </div>
+                  <mat-menu #menu="matMenu">
+                    <ng-template matMenuContent let-item="element">
+                      <button mat-menu-item>
+                        <mat-icon>edit</mat-icon>
+                        <span>Edit</span>
+                      </button>
+                      <button mat-menu-item>
+                        <mat-icon>download</mat-icon>
+                        <span>Download</span>
+                      </button>
+                      <button mat-menu-item>
+                        <mat-icon>delete</mat-icon>
+                        <span>Delete</span>
+                      </button>
+                    </ng-template>
+                  </mat-menu>
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
               </div>
-            </ng-template>
-          </e-pane>
-        </e-panes>
-      </ejs-splitter>
-    </div>
-  </div>
-</div>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </e-pane>
+  </e-panes>
+</ejs-splitter>

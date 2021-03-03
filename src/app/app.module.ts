@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 import { SplitterModule } from '@syncfusion/ej2-angular-layouts';
 import { AppComponent } from './app.component';
 import { FileExplorerComponent } from './file-explorer/file-explorer.component';
-import { MatButtonModule, MatCheckboxModule, MatIconModule, MatProgressBarModule, MatProgressSpinnerModule, MatSortModule, MatTableModule, MatTreeModule } from '@angular/material';
+import { MatButtonModule, MatCheckboxModule, MatIconModule, MatMenuModule, MatProgressBarModule, MatProgressSpinnerModule, MatSortModule, MatTableModule, MatTreeModule } from '@angular/material';
 
 @NgModule({
   declarations: [
@@ -22,7 +22,8 @@ import { MatButtonModule, MatCheckboxModule, MatIconModule, MatProgressBarModule
     MatTableModule,
     MatCheckboxModule,
     MatSortModule,
-    SplitterModule
+    SplitterModule,
+    MatMenuModule
   ],
   providers: [],
   bootstrap: [AppComponent]
