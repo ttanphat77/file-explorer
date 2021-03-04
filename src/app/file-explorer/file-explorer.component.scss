@@ -38,18 +38,29 @@
         width: 100%;
         // table-layout: fixed;
 
-        th,
+        // th,
         td {
             overflow: hidden;
             // width: auto;
             text-overflow: ellipsis;
             white-space: nowrap;
 
-            .file-icon {
-                vertical-align: bottom;
+            a {
+                color: inherit;
+
+                .iconify {
+                    width: 24px;
+                    height: 24px;
+                    vertical-align: bottom;
+                }
             }
+
         }
 
+        th button {
+            padding: 0;
+            margin-right: 20px;
+        }
 
         th.mat-header-cell:first-child,
         td.mat-cell:first-child {

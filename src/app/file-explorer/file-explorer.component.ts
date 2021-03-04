@@ -76,7 +76,9 @@ export class FileExplorerComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;
 
   public activeNode = null;
-  displayedColumns = ['select', 'name', 'weight', 'symbol', 'action'];
+  mainColumns = ['select', 'name', 'weight', 'symbol', 'action'];
+  actionColumns = ['select', 'delete'];
+  displayedColumns = this.mainColumns;
   tableDataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
 
 
@@ -110,7 +112,9 @@ export class FileExplorerComponent implements OnInit, AfterViewInit {
 
   dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
 
-
+  changeHeader() {
+    this.displayedColumns = this.selection.selected.length > 0 ? this.actionColumns : this.mainColumns;
+    }
 
 
   //selection
