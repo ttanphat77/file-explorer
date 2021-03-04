@@ -1,8 +1,9 @@
+import { DocumentAddEditFolderDialogComponent } from './../shared/document-add-edit-folder-dialog/document-add-edit-folder-dialog.component';
 
 import { SelectionModel } from '@angular/cdk/collections';
 import { FlatTreeControl } from '@angular/cdk/tree';
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { MatSort, MatTableDataSource, MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material';
+import { MatDialog, MatSort, MatTableDataSource, MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material';
 import { DataSourceService } from '../service/data-source.service';
 
 interface FoodNode {
@@ -82,7 +83,10 @@ export class FileExplorerComponent implements OnInit, AfterViewInit {
   tableDataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
 
 
-  constructor(private dataSourceService: DataSourceService) {
+  constructor(
+    private dataSourceService: DataSourceService,
+    private dialog: MatDialog
+    ) {
     this.dataSource.data = TREE_DATA;
   }
   ngAfterViewInit() {
@@ -142,4 +146,84 @@ export class FileExplorerComponent implements OnInit, AfterViewInit {
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
   }
 
+
+  // Dilog
+  openAddOrEditDialog() {
+    // create new folder, create new sub folder, edit
+    let _self = this;
+    let title = 'New Sub Folder'; // name: ['New Folder', 'New Sub Folder', 'Rename']
+    let type = 'edit'; // type: ['create', 'edit']
+    let id = 1;
+    let isSubFolder = false
+    let Parent_Folder_Id = null;
+
+    if(!id) { // id:null ->  create Folder
+      if(isSubFolder) { // isSubFolder = true -> create Sub Folder
+        title = "New Sub Folder";
+      }
+      else { // create Folder
+        title = 'New Folder'
+      }
+    } else { // id != null -> Rename Folder
+      title = 'Rename';
+    }
+    
+
+    let data = {
+      id: id,
+      name: '',
+      isSubFolder: isSubFolder,
+      Parent_Folder_Id: Parent_Folder_Id
+    }
+
+    const dialogRef = this.dialog.open(DocumentAddEditFolderDialogComponent, {
+      width: '460px',
+      maxHeight: '477px',
+      panelClass: 'document-new-folder-dialog',
+      data: {
+        title: title,
+        type: type,
+        id: id,
+        isSubFolder: isSubFolder,
+        onCreate: (name) => {
+          data.name = name;
+          console.log(data)
+          
+          // this.commonService.onShowWarningDialog(
+          //   'Name is already exist',
+          //   'There is already a file with the same name. Please use a different name.',
+          //   () => {
+          //   });
+          // this.documentService.createNewFolderDocument(data).subscribe(
+          //   (rs) => {
+          //     console.log(rs);
+          //     dialogRef.close();
+          //   },
+          //   (err) => {
+          //     console.log(err)
+          //   }
+          // )
+        },
+        onUpdate: (name) => {
+          data.name = name;
+          console.log(data)
+          // this.documentService.updateFolderNameDocument(data).subscribe(
+          //   (rs) => {
+          //     console.log(rs);
+          //     dialogRef.close();
+          //   },
+          //   (err) => {
+          //     console.log(err)
+          //   }
+          // )
+        },
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        console.log(result)
+      }
+    });
+  }
 }

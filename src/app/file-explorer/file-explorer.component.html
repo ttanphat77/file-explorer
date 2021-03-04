@@ -1,4 +1,30 @@
-<ejs-splitter #horizontal width='100%'>
+<div>
+  <div class="row">
+    <div class="col-3">
+      <button mat-button class="menu-new" [matMenuTriggerFor]="menu">
+        New 
+        <span class="iconify" data-icon="eva:arrow-down-fill" data-inline="false"></span>
+      </button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item class="item-menu" (click)="openAddOrEditDialog()">
+          <span class="iconify" data-icon="mdi:folder-plus-outline" data-inline="false"></span>
+          Create Sub Folder
+        </button>
+        <button mat-menu-item  class="item-menu">
+          <span class="iconify" data-icon="mdi:file-upload-outline" data-inline="false"></span>
+          Upload Files
+        </button>
+      </mat-menu>
+    </div>
+    <div class="col-4" style="height: 38px;">
+      <div class="input-icons"> 
+        <span class="iconify icon" data-icon="akar-icons:search" data-inline="false"></span>
+        <input class="input-field" type="text"> 
+    </div> 
+    </div>
+    <div class="col-5"></div>
+  </div>
+  <ejs-splitter #horizontal width='100%'>
   <e-panes>
     <e-pane size="25%" min="20%" max="50%">
       <ng-template #content>
@@ -133,11 +159,12 @@
                   <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
                   <tr mat-row *matRowDef="let row; columns: mainColumns;"></tr>
                 </table>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </ng-template>
-    </e-pane>
-  </e-panes>
-</ejs-splitter>
+        </ng-template>
+      </e-pane>
+    </e-panes>
+  </ejs-splitter>
+</div>

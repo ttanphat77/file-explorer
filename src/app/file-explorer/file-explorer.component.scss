@@ -115,3 +115,57 @@
 ::ng-deep .mat-checkbox .mat-checkbox-layout {
     margin-bottom: 0;
 }
+
+.menu-new {
+    width: 116px;
+    height: 40px;
+    left: 0px;
+    top: 0px;
+    background: #41404D;
+    border-radius: 5px;
+
+    font-family: Lato;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 17px;
+    line-height: 20px;
+    color: #FFFFFF;
+}
+
+.iconify {
+    width: 24px;
+    height: 24px;
+}
+
+.item-menu {
+    font-size: 13px;
+    line-height: 16px;
+    font-style: normal;
+    font-weight: bold;
+}
+
+.input-icons .iconify { 
+    position: absolute; 
+    height: 100%;
+} 
+  
+.input-icons { 
+    width: 100%; 
+    margin-bottom: 10px; 
+} 
+  
+.icon { 
+    padding: 10px; 
+    min-width: 40px; 
+    font-size: 24px;
+} 
+  
+.input-field { 
+    width: 200px; 
+    height: 38px;
+    padding: 10px; 
+    padding-left: 30px;
+    border: 1px solid #E3E3E3;
+    box-sizing: border-box;
+    border-radius: 5px;
+} 
