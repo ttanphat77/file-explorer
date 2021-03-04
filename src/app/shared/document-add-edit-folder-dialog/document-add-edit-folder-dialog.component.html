@@ -1,0 +1,23 @@
+<div class="header">
+  <button mat-button mat-dialog-title mat-dialog-close class="btn-close btn-actions">Cancel</button>
+  <div class="title-dialog-wrapper">
+    <span mat-dialog-title class="title-dialog">{{ data.title ? data.title : title }}</span>
+  </div>
+  <button mat-button mat-dialog-title class="btn-done btn-actions" (click)="submit()" type="submit">Done</button>
+</div>
+<form class="content" mat-dialog-content [formGroup]="newFolderFrm">
+<p>Folder Name</p>
+<div class="input-group mb-2">
+  <input 
+    type="text" 
+    class="form-control input-folder-name" 
+    placeholder="Untitled Folder" 
+    aria-label="Untitled Folder" 
+    aria-describedby="basic-addon2"
+    formControlName="name"
+  >
+</div>
+<mat-error *ngIf="newFolderControls.name.touched && newFolderControls.name.errors?.required" style="font-size: 13px">
+  Name is required.
+</mat-error>
+</form>
