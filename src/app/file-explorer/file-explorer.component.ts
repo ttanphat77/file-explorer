@@ -3,7 +3,7 @@ import { DocumentAddEditFolderDialogComponent } from './../shared/document-add-e
 import { SelectionModel } from '@angular/cdk/collections';
 import { FlatTreeControl } from '@angular/cdk/tree';
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { MatDialog, MatSort, MatTableDataSource, MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material';
+import { MatDialog, MatSort, MatSortable, MatTableDataSource, MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material';
 import { DataSourceService } from '../service/data-source.service';
 
 interface FoodNode {
@@ -51,20 +51,20 @@ export interface PeriodicElement {
   name: string;
   position: number;
   weight: number;
-  symbol: string;
+  modified: Date;
 }
 
 const ELEMENT_DATA: PeriodicElement[] = [
-  { position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H' },
-  { position: 2, name: 'Helium', weight: 4.0026, symbol: 'He' },
-  { position: 3, name: 'Lithium', weight: 6.941, symbol: 'Li' },
-  { position: 4, name: 'Beryllium', weight: 9.0122, symbol: 'Be' },
-  { position: 5, name: 'Boron', weight: 10.811, symbol: 'B' },
-  { position: 6, name: 'Carbon', weight: 12.0107, symbol: 'C' },
-  { position: 7, name: 'Nitrogen', weight: 14.0067, symbol: 'N' },
-  { position: 8, name: 'Oxygen', weight: 15.9994, symbol: 'O' },
-  { position: 9, name: 'Fluorine', weight: 18.9984, symbol: 'F' },
-  { position: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne' },
+  { position: 1, name: 'Hydrogen', weight: 1.0079, modified: new Date()},
+  { position: 2, name: 'Helium', weight: 4.0026, modified: new Date('2020-10-30T15:27:08')},
+  { position: 3, name: 'Lithium', weight: 6.941, modified: new Date('1996-10-30T15:27:08') },
+  { position: 4, name: 'Beryllium', weight: 9.0122, modified:new Date('1996-10-30T15:27:08') },
+  { position: 5, name: 'Boron', weight: 10.811, modified: new Date('2021-10-30T15:27:08') },
+  { position: 6, name: 'Carbon', weight: 12.0107, modified: new Date('2004-10-05T15:27:08') },
+  { position: 7, name: 'Nitrogen', weight: 14.0067, modified: new Date('1996-10-30T15:27:08') },
+  { position: 8, name: 'Oxygen', weight: 15.9994, modified: new Date('1994-10-30T15:27:08') },
+  { position: 9, name: 'Fluorine', weight: 18.9984, modified: new Date('2015-10-30T15:27:08') },
+  { position: 10, name: 'Neon', weight: 20.1797, modified: new Date('2013-10-30T15:27:08') },
 ];
 
 @Component({
@@ -77,7 +77,7 @@ export class FileExplorerComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;
 
   public activeNode = null;
-  mainColumns = ['select', 'name', 'weight', 'symbol', 'action'];
+  mainColumns = ['select', 'name' ,'weight', 'modified', 'action'];
   actionColumns = ['select', 'delete'];
   displayedColumns = this.mainColumns;
   tableDataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
@@ -96,6 +96,7 @@ export class FileExplorerComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
+    
   }
 
   hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
@@ -148,25 +149,25 @@ export class FileExplorerComponent implements OnInit, AfterViewInit {
 
 
   // Dilog
-  openAddOrEditDialog() {
+  openAddOrEditDialog(type, isSubFolder, title) {
     // create new folder, create new sub folder, edit
     let _self = this;
-    let title = 'New Sub Folder'; // name: ['New Folder', 'New Sub Folder', 'Rename']
-    let type = 'edit'; // type: ['create', 'edit']
+    // let title = 'New Sub Folder'; // name: ['New Folder', 'New Sub Folder', 'Rename']
+    // let type = 'edit'; // type: ['create', 'edit']
     let id = 1;
-    let isSubFolder = false
+    // let isSubFolder = false
     let Parent_Folder_Id = null;
 
-    if(!id) { // id:null ->  create Folder
-      if(isSubFolder) { // isSubFolder = true -> create Sub Folder
-        title = "New Sub Folder";
-      }
-      else { // create Folder
-        title = 'New Folder'
-      }
-    } else { // id != null -> Rename Folder
-      title = 'Rename';
-    }
+    // if(!id) { // id:null ->  create Folder
+    //   if(isSubFolder) { // isSubFolder = true -> create Sub Folder
+    //     title = "New Sub Folder";
+    //   }
+    //   else { // create Folder
+    //     title = 'New Folder'
+    //   }
+    // } else { // id != null -> Rename Folder
+    //   title = 'Rename';
+    // }
     
 
     let data = {
@@ -225,5 +226,72 @@ export class FileExplorerComponent implements OnInit, AfterViewInit {
         console.log(result)
       }
     });
+  }
+
+  @ViewChild(MatSort) matSort: MatSort;
+  foods = [
+    {value: 'desc-date', viewValue: 'Newest to Oldest'},
+    {value: 'asc-date', viewValue: 'Oldest to Newest'},
+    {value: 'asc-alpha', viewValue: 'A to Z'},
+    {value: 'desc-alpha', viewValue: 'Z to A'}
+  ];
+  selectedFood = this.foods[2].value
+  selectCar(event) {
+    this.selectedFood = event.value;
+  }
+  
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.tableDataSource.filter = filterValue.trim().toLowerCase();
+
+    if(this.tableDataSource.paginator) {
+      this.tableDataSource.paginator.firstPage();
+    }
+  }
+
+  orderData(id: string, start?: 'asc' | 'desc') {
+    const matSort = this.tableDataSource.sort;
+    const toState = 'active';
+    const disableClear = false;
+
+    matSort.sort({ id: null, start, disableClear });
+    matSort.sort({ id, start, disableClear });
+
+    this.tableDataSource.sort = this.matSort;
+  }
+
+  // sortDataSource(id: string, start?: 'asc' | 'desc') {
+  //   let descLastModified = 0;
+  //   let ascLastModified = 0;
+  //   if(start === 'desc') {
+  //     descLastModified = -1;
+  //     ascLastModified = 1;
+  //   } else {
+  //     descLastModified = 1;
+  //     ascLastModified = -1;
+  //   }
+  //   this.tableDataSource.sort.sort(<MatSortable>({ id: id, start: start }));
+  //   this.tableDataSource.data.sort((a: any, b: any) => {
+  //       if (a.lastModified < b.lastModified) {
+  //           return descLastModified;
+  //       } else if (a.lastModified > b.lastModified) {
+  //           return ascLastModified;
+  //       } else {
+  //           return 0;
+  //       }
+  //   });
+  // }
+
+  selectSort(event) {
+    console.log(event);
+    if(event.value == 'asc-alpha') {
+      this.orderData('name', 'asc');
+    } else if(event.value == 'desc-alpha') {
+      this.orderData('name', 'desc');
+    } else if(event.value == 'desc-date') {
+      this.orderData('modified', 'desc');
+    } else {
+      this.orderData('modified', 'asc');
+    }
   }
 }
