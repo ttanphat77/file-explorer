@@ -6,6 +6,7 @@ import { SplitterModule } from '@syncfusion/ej2-angular-layouts';
 import { AppComponent } from './app.component';
 import { FileExplorerComponent } from './file-explorer/file-explorer.component';
 import { MatButtonModule, MatCheckboxModule, MatIconModule, MatMenuModule, MatProgressBarModule, MatProgressSpinnerModule, MatSortModule, MatTableModule, MatTreeModule } from '@angular/material';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { MatButtonModule, MatCheckboxModule, MatIconModule, MatMenuModule, MatPr
     MatSortModule,
     SplitterModule,
     MatMenuModule,
-    SharedModule
+    SharedModule,
+    FormsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

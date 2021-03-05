@@ -43,7 +43,10 @@
                   <span class="iconify" data-icon="mdi:folder-plus-outline" data-inline="false"></span>
                   Create Sub Folder
                 </button>
-                <button mat-menu-item  class="item-menu">
+                <form #formAttact="ngForm" id="formAttact" (ngSubmit)="handleAttachDoc($event)">
+                  <input #fileInput type="file" name="attackFile" id="attackFile" style="display: none;" (change)="handleUploadFile($event)" multiple="true"/>
+                </form>
+                <button mat-menu-item  class="item-menu" (click)="handleAttack(0)">
                   <span class="iconify" data-icon="mdi:file-upload-outline" data-inline="false"></span>
                   Upload Files
                 </button>

@@ -2,9 +2,10 @@ import { DocumentAddEditFolderDialogComponent } from './../shared/document-add-e
 
 import { SelectionModel } from '@angular/cdk/collections';
 import { FlatTreeControl } from '@angular/cdk/tree';
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatSort, MatSortable, MatTableDataSource, MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material';
 import { DataSourceService } from '../service/data-source.service';
+import { NgForm } from '@angular/forms';
 
 interface FoodNode {
   name: string;
@@ -294,4 +295,95 @@ export class FileExplorerComponent implements OnInit, AfterViewInit {
       this.orderData('modified', 'asc');
     }
   }
+
+  @ViewChild('formAttact') form: NgForm;
+  @ViewChild('fileInput') fileInput: ElementRef;
+  public isLoading: boolean = false;
+  public type: string;
+  public selectedFile: File;
+
+  public types = [
+    {
+      id: 1,
+      type: 'Files',
+      typeInfo: 'Related documents to the project',
+      accept: '.pdf, .doc, .docx, .xls, .xlsx, .ods',
+    },
+    // {
+    //     id: 2,
+    //     type: 'Photos',
+    //     typeInfo: 'Related photos to the project',
+    //     accept: 'image/*',
+    // },
+    {
+      id: 3,
+      type: 'Contracts',
+      typeInfo: 'Related contracts to the project',
+      accept: '',
+    },
+    {
+      id: 4,
+      type: 'Accounting',
+      typeInfo: 'Accounting documents to the project',
+      accept: ''
+    }
+  ];
+
+  handleAttachDoc(event) {
+    this.isLoading = true;
+    console.log(event)
+    // this.httpClient
+    //   .post(
+    //     `/api/Jobs/uploadToS3/${this.jobId}/${this.type}`,
+    //     event,
+    //   )
+    //   .subscribe(
+    //     (rs) => {
+    //       this.isLoading = false;
+    //       if (rs) {
+    //         // this.snackBar.open('Document has saved successfully!');
+    //         this.onGetJobDocument();
+    //         this.totalDoc += 1;
+    //       }
+    //     },
+    //     (err) => {
+    //       console.error(err);
+    //       this.isLoading = false;
+    //       // this.snackBar.open(err.error['Message']);
+    //     },
+    //   );
+  }
+
+  // handleAttack 
+  handleAttack(index) {
+    const el: HTMLElement = this.fileInput.nativeElement as HTMLElement;
+    this.type = this.types[index].type;
+    // android does not have property 'accept'
+    // this.fileInput.nativeElement.accept = this.types[index].accept;
+    el.click();
+  }
+
+  // handleUploadFile
+  handleUploadFile(event) {
+    if (event.target.files && event.target.files[0]) {
+      const fd = new FormData();
+      for (let i = 0; i < event.target.files.length; i++) {
+        var f = event.target.files[i];
+        fd.append('files', f, f.name);
+      }
+      this.form.ngSubmit.emit(fd);
+    }
+  }
+
+  listMIMEtypes = {
+    doc: 'application/msword',
+    docx:
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    xls: 'application/vnd.ms-excel',
+    xlsx:
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    png: 'image/png',
+    jpeg: 'image/jpeg',
+    jpg: 'image/jpeg',
+  };
 }
